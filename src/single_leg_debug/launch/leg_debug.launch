@@ -1,0 +1,11 @@
+<launch>
+  <!-- Load Configuration File -->
+  <rosparam file="$(find single_leg_debug)/config/leg_config.yaml" command="load" ns="leg_calibration_node" />
+
+  <!-- Run the Leg Calibration Node -->
+  <node name="leg_calibration_node" pkg="single_leg_debug" type="leg_calibration.py" output="screen" />
+
+  <!-- Optional Parameter to start walking test node automatically (default false) -->
+  <arg name="start_walking" default="false" />
+  <node if="$(arg start_walking)" name="walking_test_node" pkg="single_leg_debug" type="walking_test.py" output="screen" />
+</launch>

@@ -1,0 +1,5 @@
+<launch>
+  <node name="single_servo_node" pkg="single_servo_debug" type="single_servo_node.py" output="screen">
+    <rosparam file="$(find single_servo_debug)/config/single_servo.yaml" command="load"/>
+  </node>
+</launch>

@@ -1,0 +1,4 @@
+dynamixel_info:
+  dxl_id: 14
+  port: "/dev/ttyUSB0"
+  baudrate: 1000000

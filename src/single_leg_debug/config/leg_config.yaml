@@ -1,0 +1,12 @@
+leg_info:
+  port: "/dev/ttyUSB0"
+  baudrate: 1000000
+  # 单条腿的三个关节ID (例: 髋关节(Coxa), 大腿(Femur), 小腿(Tibia))
+  joint_ids: [11, 1, 2]
+  
+  # 初始或零点偏置(Offset)标定，对应中心值 2048 的偏移量
+  # 若机械装配有偏差，可通过修改此处调整零位
+  offsets: [0, 0, 0]
+
+  # 舵机转向反转标记，1为正向，-1为反向
+  directions: [1, 1, 1]
