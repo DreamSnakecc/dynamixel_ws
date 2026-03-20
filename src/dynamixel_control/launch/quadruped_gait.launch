@@ -1,0 +1,30 @@
+<launch>
+  <arg name="left_device_name" default="/dev/ttyUSB2" />
+  <arg name="right_device_name" default="/dev/ttyUSB3" />
+
+  <arg name="start_gait" default="true" />
+
+  <rosparam command="load" file="$(find dynamixel_control)/config/quadruped_gait.yaml" />
+
+  <node pkg="dynamixel_control" type="multi_dxl_node" name="multi_dxl_node_left" ns="left_board" output="screen">
+    <remap from="set_position" to="/set_position" />
+    <param name="device_name" value="$(arg left_device_name)" />
+    <param name="baudrate" value="1000000" />
+    <rosparam param="motor_ids">[11, 1, 2, 14, 7, 8]</rosparam>
+    <rosparam param="multi_turn_ids">[1, 2, 7, 8]</rosparam>
+  </node>
+
+  <node pkg="dynamixel_control" type="multi_dxl_node" name="multi_dxl_node_right" ns="right_board" output="screen">
+    <remap from="set_position" to="/set_position" />
+    <param name="device_name" value="$(arg right_device_name)" />
+    <param name="baudrate" value="1000000" />
+    <rosparam param="motor_ids">[12, 3, 4, 13, 5, 6]</rosparam>
+    <rosparam param="multi_turn_ids">[3, 4, 5, 6]</rosparam>
+  </node>
+
+  <!-- Part 1: Robot Kinematics and Initialization -->
+  <node pkg="dynamixel_control" type="quadruped_core.py" name="quadruped_core" output="screen" />
+  
+  <!-- Part 2: Gait Trajectory Generator (Optional/Toggled via argument) -->
+  <node if="$(arg start_gait)" pkg="dynamixel_control" type="quadruped_gait.py" name="quadruped_gait_generator" output="screen" />
+</launch>
