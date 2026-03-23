@@ -1,0 +1,110 @@
+# Left controller board: left-front + left-rear
+left_board:
+  device_name: "/dev/ttyUSB2"
+  baudrate: 1000000
+  motor_ids: [11, 1, 2, 14, 7, 8]
+  multi_turn_ids: [1, 2, 7, 8]
+
+# Right controller board: right-front + right-rear
+right_board:
+  device_name: "/dev/ttyUSB3"
+  baudrate: 1000000
+  motor_ids: [12, 3, 4, 13, 5, 6]
+  multi_turn_ids: [3, 4, 5, 6]
+
+# High-level gait control config
+gait_controller:
+  rate_hz: 100.0
+  gait: "crawl"          # crawl or trot
+  gait_frequency: 0.35    # Hz
+
+  # Foot trajectory command in base frame (mm), +x is forward.
+  nominal_x: 200.0      # The nominal foot position in the x direction (forward) when the robot is standing still. This should be set based on the robot's geometry and desired posture.
+  nominal_y: 0.0
+  nominal_z: -180.0     # The nominal foot position in the z direction (downward) when the robot is standing still. This should be set based on the robot's geometry and desired posture.
+  step_x: 35.0
+  step_y: 0.0
+  swing_height: 25.0
+
+  crawl_swing_ratio: 0.25
+  trot_swing_ratio: 0.50
+
+  # Active chain geometric lengths from your MDH table (mm)
+  link_coxa: 44.75
+  link_femur: 74.0
+  link_tibia: 150.0
+
+  # Passive chain and end-effector geometric lengths mapped from MDH (mm)
+  link_a3: 41.5
+  link_d6: -13.5
+  link_d7: -106.7
+
+  # Base geometry (mm) - Leg origin distance from base center
+  base_radius: 203.06
+
+  # XW430 joint output has external reducer i=4.421
+  gear_ratio_joint23: 4.421
+
+  # Per-joint mechanical limits (deg)
+  joint_limit_deg:
+    j1: [-90.0, 90.0]
+    j2: [-100.0, 100.0]
+    j3: [-10.0, 190.0]
+
+  # Zero-offset at output joint side (deg)
+  # q3 in MDH is (q3 - 90), so j3 offset usually needs calibration.
+  joint_zero_deg:
+    j1: 0.0
+    j2: 0.0
+    j3: 90.0
+
+  # Default motor mapping [joint1, joint2, joint3] for each leg
+  legs:
+    lf:
+      motor_ids: [11, 1, 2]
+      hip_yaw_deg: 45.0
+    rf:
+      motor_ids: [12, 3, 4]
+      hip_yaw_deg: -45.0
+    lr:
+      motor_ids: [14, 7, 8]
+      hip_yaw_deg: 135.0
+    rr:
+      motor_ids: [13, 5, 6]
+      hip_yaw_deg: -135.0
+
+  # Tick zero and direction for each motor (must be calibrated on real robot)  
+  # motor_home_ticks is the tick value corresponding to zero position of the output joint, 
+  # and motor_dir is the direction multiplier to convert from positive joint angle to positive tick value. 
+  # For example, if a motor has motor_home_ticks=2048 and motor_dir=1, then a joint angle of 0 deg corresponds to 2048 ticks, 
+  # and a joint angle of +90 deg corresponds to 2048 + (4096/360)*90 = 3072 ticks.
+  # If the same motor has motor_dir=-1, then a joint angle of +90 deg corresponds to 2048 - (4096/360)*90 = 1024 ticks.
+  motor_home_ticks:
+    "1": 4448
+    "2": 381
+    "3": 0
+    "4": 1687
+    "5": 3819
+    "6": 1141
+    "7": 155
+    "8": 5479
+    "11": 2027
+    "12": 2048
+    "13": 2033
+    "14": 1026
+
+  motor_dir:
+    "1": 1
+    "2": 1
+    "3": -1
+    "4": -1
+    "5": 1
+    "6": 1
+    "7": -1
+    "8": -1
+    "11": -1
+    "12": -1
+    "13": -1
+    "14": -1
+
+  single_turn_ids: [11, 12, 13, 14]
