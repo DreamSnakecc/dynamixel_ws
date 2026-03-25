@@ -1,0 +1,24 @@
+<launch>
+  <arg name="left_device_name" default="/dev/ttyUSB_l" />
+  <arg name="right_device_name" default="/dev/ttyUSB_r" />
+
+  <arg name="start_gait" default="true" />
+
+  <rosparam command="load" file="$(find dynamixel_control)/config/quadruped_gait.yaml" />
+
+  <node pkg="dynamixel_control" type="multi_dxl_node" name="multi_dxl_node_left" ns="left_board" output="screen">
+    <param name="device_name" value="$(arg left_device_name)" />
+    <remap from="set_position" to="/set_position" />
+  </node>
+
+  <node pkg="dynamixel_control" type="multi_dxl_node" name="multi_dxl_node_right" ns="right_board" output="screen">
+    <param name="device_name" value="$(arg right_device_name)" />
+    <remap from="set_position" to="/set_position" />
+  </node>
+
+  <!-- Part 1: Robot Kinematics and Initialization -->
+  <node pkg="dynamixel_control" type="quadruped_core.py" name="quadruped_core" output="screen" />
+  
+  <!-- Part 2: Gait Trajectory Generator (Optional/Toggled via argument) -->
+  <node if="$(arg start_gait)" pkg="dynamixel_control" type="quadruped_gait.py" name="quadruped_gait_generator" output="screen" />
+</launch>
